@@ -3,7 +3,7 @@ import {
     createTypeMapper
 } from "./TypeMapper.ts"
 import {
-    LiquidFunction,
+    VexFunction,
     TYPE_METADATA,
     bool,
     char,
@@ -20,10 +20,10 @@ import {
     short
 } from "./Types.ts";
 
-import type {TypeMetadata, LiquidType,} from "./Types.ts"
+import type {TypeMetadata, VexType,} from "./Types.ts"
 
 export type {
-    LiquidType, TypeMetadata, 
+    VexType, TypeMetadata, 
 };
 
 export {
@@ -34,10 +34,10 @@ export {
     float,
     long,
     short,
-    LiquidFunction,
+    VexFunction,
     TYPE_METADATA,
-    getCppType,
     TypeMapper,
+    getCppType,
     createTypeMapper,
     isFloatingType,
     isIntegerType,

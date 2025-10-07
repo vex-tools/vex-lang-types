@@ -17,7 +17,7 @@ export type bool = Brand<boolean, 'bool'>;
 export type char = Brand<string, 'char'>;
 
 // Union of all liquid types
-export type LiquidType = 
+export type VexType = 
     | int 
     | short 
     | long 
@@ -132,9 +132,9 @@ export function isWithinBounds(value: number, typeName: string): boolean {
 }
 
 /**
- * Liquid Function wrapper for function types
+ * Vex Function wrapper for function types
  */
-export class LiquidFunction<TReturn extends LiquidType = LiquidType> {
+export class VexFunction<TReturn extends VexType = VexType> {
     constructor(
         public readonly name: string,
         public readonly returnType: string,
