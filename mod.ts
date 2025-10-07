@@ -4,9 +4,7 @@ import {
 } from "./TypeMapper.ts"
 import {
     LiquidFunction,
-    LiquidType,
     TYPE_METADATA,
-    TypeMetadata,
     bool,
     char,
     double,
@@ -22,9 +20,12 @@ import {
     short
 } from "./Types.ts";
 
+import type {TypeMetadata, LiquidType,} from "./Types.ts"
+
 export type {
     LiquidType, TypeMetadata, 
 };
+
 export {
     int,
     bool,
