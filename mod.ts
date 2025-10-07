@@ -9,8 +9,6 @@
  * @module
  */
 
-/// <reference types="./vex.d.ts"/>
-
 import {
     TypeMapper,
     createTypeMapper
