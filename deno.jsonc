@@ -4,6 +4,12 @@
     "license": "MIT",
     "exports": "./mod.ts",
     "imports": {
+        "vex-std/iostream": "./vex-std/iostream.ts",
         "typescript": "npm:typescript@^5.9.3"
+    },
+    "compilerOptions": {
+        "types": [
+            "./vex.d.ts"
+        ]
     }
 }
