@@ -1,3 +1,14 @@
+/**
+ * Core type utilities used by the Vex Lang.
+ * 
+ * This module provides a collection of TypeScript type definitions compatible 
+ * with C++, along with a set of utility functions for type checking and related 
+ * operations. It serves as the foundation for strong type interoperability within 
+ * the Vex Lang ecosystem.
+ * 
+ * @module
+ */
+
 import {
     TypeMapper,
     createTypeMapper

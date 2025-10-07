@@ -1,13 +1,22 @@
 /**
- * Liquid Script Type System
- * Maps TypeScript types to C++ compatible types with runtime validation
+ * Vex Lang Type System
+ * Maps TypeScript types to C++ compatible types with runtime validation.
+ * 
+ * The linter will not always complain about types like 
+ * integers and numbers, be aware of this, if it does 
+ * not complain it may not work as expected and I hope to fix it soon.
  */
 
-// Brand types for type safety at compile time
+/**
+ * Brand types for type safety at compile time.
+ * 
+ * This works, don't ask me how.
+ */
 declare const __brand: unique symbol;
 type Brand<T, TBrand extends string> = T & { readonly [__brand]: TBrand };
 
 // Primitive type aliases with branding
+
 export type int = Brand<number, 'int'>;
 export type short = Brand<number, 'short'>;
 export type long = Brand<number, 'long'>;
@@ -16,7 +25,14 @@ export type double = Brand<number, 'double'>;
 export type bool = Brand<boolean, 'bool'>;
 export type char = Brand<string, 'char'>;
 
-// Union of all liquid types
+
+/**
+ * Union of all Vex types.
+ * 
+ * Store the primitive types compatible with C++.
+ * 
+ * Don't tell me it needs improvement, make a pull request :)
+ */
 export type VexType = 
     | int 
     | short 
@@ -28,10 +44,12 @@ export type VexType =
     | string 
     | void;
 
-/**
- * Type constructors with runtime validation
- */
 
+/**
+ * Integer type constructor with runtime validation.
+ * @param value The number value to make and validate integer.
+ * @returns The value as int.
+ */
 export function int(value: number): int {
     if (!Number.isInteger(value)) {
         throw new TypeError(`int requires an integer value, got ${value}`);
@@ -42,6 +60,11 @@ export function int(value: number): int {
     return value as int;
 }
 
+/**
+ * Short type constructor with runtime validation.
+ * @param value The number value to make and validate short.
+ * @returns The value as short.
+ */
 export function short(value: number): short {
     if (!Number.isInteger(value)) {
         throw new TypeError(`short requires an integer value, got ${value}`);
@@ -52,6 +75,11 @@ export function short(value: number): short {
     return value as short;
 }
 
+/**
+ * Long type constructor with runtime validation.
+ * @param value The number value to make and validate long.
+ * @returns The value as long.
+ */
 export function long(value: number): long {
     if (!Number.isInteger(value)) {
         throw new TypeError(`long requires an integer value, got ${value}`);
@@ -63,6 +91,11 @@ export function long(value: number): long {
     return value as long;
 }
 
+/**
+ * Float type constructor with runtime validation.
+ * @param value The number value to make and validate float.
+ * @returns The value as float.
+ */
 export function float(value: number): float {
     // Float range check (IEEE 754 single precision)
     const absValue = Math.abs(value);
@@ -75,14 +108,32 @@ export function float(value: number): float {
     return value as float;
 }
 
+/**
+ * Double type constructor with runtime validation.
+ * 
+ * **Abstraction**: the TypeScript/JavaScript numbers are double.
+ * @param value The number value to make and validate double.
+ * @returns The value as double.
+ */
 export function double(value: number): double {
     return value as double;
 }
 
+/**
+ * Bool type constructor with runtime validation.
+ * **Abstraction**: the TypeScript/JavaScript boolean are bool.
+ * @param value The boolean value to make and validate bool.
+ * @returns The value as bool.
+ */
 export function bool(value: boolean): bool {
     return value as bool;
 }
 
+/**
+ * Char type constructor with runtime validation.
+ * @param value The string value to make and validate char.
+ * @returns The value as char.
+ */
 export function char(value: string): char {
     if (value.length !== 1) {
         throw new TypeError(`char requires exactly one character, got "${value}" (length: ${value.length})`);
@@ -94,10 +145,21 @@ export function char(value: string): char {
  * Type metadata for reflection and transpilation
  */
 export interface TypeMetadata {
+    /**The name of type */
     name: string;
+    /**The C++ corresponding type */
     cppType: string;
-    size: number; // in bytes
+    /**The type size in bytes */
+    size: number;
+    /**The minimum type size
+     * 
+     * `Not required`
+     */
     min?: number;
+    /**The maximum type size 
+     * 
+    * `Not required`
+    */
     max?: number;
 }
 
@@ -113,15 +175,22 @@ export const TYPE_METADATA: Record<string, TypeMetadata> = {
     void: { name: 'void', cppType: 'void', size: 0 }
 };
 
+
 /**
- * Get C++ type string from TypeScript type name
+ * Get C++ type string from TypeScript type name.
+ * @param typeName The typescript typename as string.
+ * @returns The C++ type as TypeScript string.
  */
 export function getCppType(typeName: string): string {
     return TYPE_METADATA[typeName]?.cppType || 'auto';
 }
 
+
 /**
- * Check if a value is within type bounds
+ * Check if a value is within type bounds.
+ * @param value The value to check.
+ * @param typeName The type name as string.
+ * @returns boolean
  */
 export function isWithinBounds(value: number, typeName: string): boolean {
     const metadata = TYPE_METADATA[typeName];
@@ -145,6 +214,7 @@ export class VexFunction<TReturn extends VexType = VexType> {
 
     /**
      * Get C++ function signature
+     * @returns The signature as string.
      */
     getCppSignature(): string {
         const params = this.parameters
@@ -157,18 +227,39 @@ export class VexFunction<TReturn extends VexType = VexType> {
 /**
  * Type utilities for compile-time checks
  */
+
+/**
+ * Compile time check if a type is integer.
+ * @param typeName The type as string to check.
+ * @returns boolean
+ */
 export function isIntegerType(typeName: string): boolean {
     return ['int', 'short', 'long'].includes(typeName);
 }
 
+/**
+ * Compile time check if a type is floating.
+ * @param typeName The type as string to check.
+ * @returns boolean
+ */
 export function isFloatingType(typeName: string): boolean {
     return ['float', 'double'].includes(typeName);
 }
 
+/**
+ * Compile time check if a type is numeric.
+ * @param typeName The type as string to check.
+ * @returns boolean
+ */
 export function isNumericType(typeName: string): boolean {
     return isIntegerType(typeName) || isFloatingType(typeName);
 }
 
+/**
+ * Compile time check if a type is primitive.
+ * @param typeName The type as string to check.
+ * @returns boolean
+ */
 export function isPrimitiveType(typeName: string): boolean {
     return typeName in TYPE_METADATA;
 }
